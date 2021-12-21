@@ -35,7 +35,7 @@ def sbx_crossover(pa, pb, nc = 15):
     c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
     return c1, c2
 
-def polynomial_mutation(ind, nm = 15, rm = 0.9, all_dimensions = False):
+def polynomial_mutation(ind, nm = 15, rm = 0.1, all_dimensions = False):
     '''
     pa, pb in [0, 1]^n
     '''
