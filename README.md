@@ -1,2 +1,2 @@
 # MFEA_MSO
-newbie in MFO lab
+newbie in MSO lab
