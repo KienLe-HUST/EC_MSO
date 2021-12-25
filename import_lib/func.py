@@ -6,9 +6,19 @@ class fnc:
     lower_bound = None
     name = ''
 
-    def __init__(self, d, shift = 0,limited_space: bool = False, lower_bound = None, upper_bound = None):
+    def __init__(self, d, shift = 0, rotation_matrix: np.ndarray = None,
+                limited_space: bool = False, lower_bound = None, upper_bound = None):
         self.d = d
         self.name = self.__class__.__name__ + "_d:"+ str(d) + "_translation:" + str(shift)
+        if rotation_matrix != None:
+            assert np.all(rotation_matrix.shape == d)
+            self.rotation_matrix = rotation_matrix
+            self.inv_ro_matrix = np.linalg.inv(self.rotation_matrix)
+        else:
+            self.rotation_matrix = np.identity(d)
+            self.inv_ro_matrix = np.identity(d)
+
+
         if type(shift) != list:
             self.shift = shift
         else:
@@ -25,7 +35,9 @@ class fnc:
 
     def encode(self, x):
         x_encode = x
-        x_encode -= 2*self.shift
+        x_encode -= self.shift
+        x_encode = self.rotation_matrix @ x_encode 
+
         if self.limited_space == True:
             x_encode = (x_encode - self.lower_bound)/(self.upper_bound - self.lower_bound)
         return x_encode
@@ -34,7 +46,9 @@ class fnc:
         x_decoded = x[:self.d]
         if self.limited_space == True:
             x_decoded = x_decoded * (self.upper_bound - self.lower_bound) + self.lower_bound
-        x_decoded = x_decoded + self.shift
+
+        x_decoded = self.inv_ro_matrix @ x_decoded  
+        
         return x_decoded
 
 class sphere(fnc):
