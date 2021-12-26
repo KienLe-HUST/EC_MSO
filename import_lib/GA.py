@@ -23,11 +23,9 @@ def sbx_crossover(pa, pb, nc = 15):
     '''
     pa, pb in [0, 1]^n
     '''
-    u = np.random.uniform()
-    if u <= 0.5:
-        beta = (2*u)**(1/(nc +1))
-    else:
-        beta = (1/(2 * (1 - u)))**(1 / (1 + nc))
+    u = np.random.uniform(size = len(pa))
+
+    beta = np.where(u <= 0.5, (2*u)**(1/(nc +1)), (2 * (1 - u))**(-1 / (1 + nc)))
         
     c1 = 0.5*((1 + beta) * pa + (1 - beta) * pb)
     c2 = 0.5*((1 - beta) * pa + (1 + beta) * pb)
@@ -35,7 +33,7 @@ def sbx_crossover(pa, pb, nc = 15):
     c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
     return c1, c2
 
-def polynomial_mutation(ind, nm = 15, rm = 0.1, all_dimensions = False):
+def polynomial_mutation(ind, nm = 15, all_dimensions = False):
     '''
     pa, pb in [0, 1]^n
     '''
@@ -52,7 +50,7 @@ def polynomial_mutation(ind, nm = 15, rm = 0.1, all_dimensions = False):
             return p + delta_r * (1 - p)
     else:
         for i in range(len(p)):
-            if np.random.uniform() <= rm:
+            if np.random.uniform() <= 1/len(p):
                 u = np.random.rand()
                 if u <= 0.5:
                     delta_l = (2*u)**(1/(nm + 1)) - 1

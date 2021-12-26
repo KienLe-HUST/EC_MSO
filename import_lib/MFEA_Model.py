@@ -3,7 +3,7 @@ import numpy as np
 import sys
 from import_lib.GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task, polynomial_mutation, sbx_crossover
 
-def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rmp = 0.1, nc = 15, nm = 15, rm = 0.02,
+def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rmp = 0.1, nc = 15, nm = 15, 
                 one_line = False, num_epochs_printed = 20, polynomial_all_gen = False, evaluate_initial_skillFactor = True) -> Tuple[list, np.ndarray]:
     
     #save history of factorial cost
@@ -45,8 +45,8 @@ def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rm
                 # intra - crossover
                 ca, cb = sbx_crossover(pa, pb, nc)
                             
-                ca = polynomial_mutation(ca,nm, rm, polynomial_all_gen)
-                cb = polynomial_mutation(cb,nm, rm, polynomial_all_gen)   
+                ca = polynomial_mutation(ca,nm, polynomial_all_gen)
+                cb = polynomial_mutation(cb,nm, polynomial_all_gen)   
                 
                 offspring = np.append(offspring, [ca, cb], axis = 0)
                 offspring_skill_factor = np.append(offspring_skill_factor, [skf_a, skf_a])
@@ -55,8 +55,8 @@ def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rm
                 # inter - crossover
                 ca, cb = sbx_crossover(pa, pb, nc)
                             
-                ca = polynomial_mutation(ca,nm, rm, polynomial_all_gen)
-                cb = polynomial_mutation(cb,nm, rm, polynomial_all_gen)   
+                ca = polynomial_mutation(ca,nm, polynomial_all_gen)
+                cb = polynomial_mutation(cb,nm, polynomial_all_gen)   
 
                 offspring = np.append(offspring, [ca, cb], axis = 0)
                 skf_ca, skf_cb = np.random.choice([skf_a, skf_b], 2, True)
@@ -72,8 +72,8 @@ def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rm
                 ca, _ = sbx_crossover(pa, pa2)
                 cb, _ = sbx_crossover(pb, pb2)
                             
-                ca = polynomial_mutation(ca,nm, rm, polynomial_all_gen)
-                cb = polynomial_mutation(cb,nm, rm, polynomial_all_gen)   
+                ca = polynomial_mutation(ca,nm, polynomial_all_gen)
+                cb = polynomial_mutation(cb,nm, polynomial_all_gen)   
             
                 offspring = np.append(offspring, [ca, cb], axis = 0)
                 offspring_skill_factor = np.append(offspring_skill_factor, [skf_a, skf_b])   
@@ -113,7 +113,7 @@ def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rm
 
     return sol, history_cost
 
-def MFEA_base(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rmp = 0.1, nc = 15, nm = 15, rm = 0.02,
+def MFEA_base(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rmp = 0.1, nc = 15, nm = 15, 
                 one_line = False, num_epochs_printed = 20, polynomial_all_gen = False, evaluate_initial_skillFactor = True) -> Tuple[list, np.ndarray]:
     
     #save history of factorial cost
@@ -168,8 +168,8 @@ def MFEA_base(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = []
    
             else:
                 # mutation  
-                ca = polynomial_mutation(pa,nm, rm, polynomial_all_gen)
-                cb = polynomial_mutation(pb,nm, rm, polynomial_all_gen)   
+                ca = polynomial_mutation(pa,nm, polynomial_all_gen)
+                cb = polynomial_mutation(pb,nm, polynomial_all_gen)   
             
                 offspring = np.append(offspring, [ca, cb], axis = 0)
                 offspring_skill_factor = np.append(offspring_skill_factor, [skf_a, skf_b])   
