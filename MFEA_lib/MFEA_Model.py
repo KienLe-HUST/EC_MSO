@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
 import sys
-from import_lib.GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task, polynomial_mutation, sbx_crossover
+from .GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task, polynomial_mutation, sbx_crossover
 
 def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rmp = 0.1, nc = 15, nm = 15, 
                 one_line = False, num_epochs_printed = 20, polynomial_all_gen = False, evaluate_initial_skillFactor = True) -> Tuple[list, np.ndarray]:
