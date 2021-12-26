@@ -10,8 +10,8 @@ class fnc:
                 limited_space: bool = False, lower_bound = None, upper_bound = None):
         self.d = d
         self.name = self.__class__.__name__ + "_d:"+ str(d) + "_translation:" + str(shift)
-        if rotation_matrix != None:
-            assert np.all(rotation_matrix.shape == d)
+        if rotation_matrix is not None:
+            assert np.all(np.array(rotation_matrix.shape) == d)
             self.rotation_matrix = rotation_matrix
             self.inv_ro_matrix = np.linalg.inv(self.rotation_matrix)
         else:
