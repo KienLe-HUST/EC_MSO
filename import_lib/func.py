@@ -36,7 +36,7 @@ class fnc:
     def encode(self, x):
         x_encode = x
         x_encode -= self.shift
-        x_encode = self.rotation_matrix @ x_encode 
+        x_encode = self.inv_ro_matrix @ x_encode 
 
         if self.limited_space == True:
             x_encode = (x_encode - self.lower_bound)/(self.upper_bound - self.lower_bound)
@@ -47,7 +47,7 @@ class fnc:
         if self.limited_space == True:
             x_decoded = x_decoded * (self.upper_bound - self.lower_bound) + self.lower_bound
 
-        x_decoded = self.inv_ro_matrix @ x_decoded  
+        x_decoded = self.rotation_matrix @ x_decoded  
         
         return x_decoded
 

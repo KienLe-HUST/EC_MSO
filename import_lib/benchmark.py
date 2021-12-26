@@ -76,9 +76,9 @@ def GECCO20_benchmark_50tasks(ID):
 
     for task_id in range(task_size):
         func_id = choice_functions[task_id % len(choice_functions)]
-        file_dir = path + "/references/GECCO20/Tasks/benchmark_" + str(func_id)
-        shift_file = "/bias_" + str(func_id)
-        rotation_file = "/matrix_" + str(func_id)
+        file_dir = path + "/references/GECCO20/Tasks/benchmark_" + str(ID)
+        shift_file = "/bias_" + str(task_id + 1)
+        rotation_file = "/matrix_" + str(task_id + 1)
         matrix = loadtxt(file_dir + rotation_file)
         shift = loadtxt(file_dir + shift_file)
 
