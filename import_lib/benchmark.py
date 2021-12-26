@@ -6,7 +6,7 @@ import pandas as pd
 from scipy.io import loadmat
 import os
 
-
+path = os.path.dirname(os.path.realpath(__file__))
 
 
 # %%
@@ -42,7 +42,6 @@ def CEC17_benchmark_10tasks():
     return tasks
     
 
-path = os.path.dirname(os.path.realpath(__file__))
 
 # %%
 def GECCO20_benchmark_50tasks(ID):

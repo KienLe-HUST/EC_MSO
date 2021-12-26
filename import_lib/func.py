@@ -35,20 +35,27 @@ class fnc:
 
     def encode(self, x):
         x_encode = x
-        x_encode -= self.shift
-        x_encode = self.inv_ro_matrix @ x_encode 
-
+        x_encode = self.inv_ro_matrix @ x_encode + self.shift
+        
         if self.limited_space == True:
             x_encode = (x_encode - self.lower_bound)/(self.upper_bound - self.lower_bound)
         return x_encode
+
+# sphere: 0 ->shift = 80, matrix = M;      
+# encode:
+#   input x   
+#   x = invM*x + shift
+#   scale x
+# decode:
+#   scale x
+#   x = M * (x- shift)
 
     def decode(self, x):
         x_decoded = x[:self.d]
         if self.limited_space == True:
             x_decoded = x_decoded * (self.upper_bound - self.lower_bound) + self.lower_bound
 
-        x_decoded = self.rotation_matrix @ x_decoded  
-        
+        x_decoded = self.rotation_matrix @ (x_decoded - self.shift) 
         return x_decoded
 
 class sphere(fnc):

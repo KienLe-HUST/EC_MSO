@@ -69,8 +69,8 @@ def MFEA1(num_epochs, num_inds_each_task, range_init_pop = [0, 1],tasks = [], rm
                 pa2 = population[idx_pa2]
                 pb2 = population[idx_pb2]
 
-                ca, _ = sbx_crossover(pa, pa2)
-                cb, _ = sbx_crossover(pb, pb2)
+                ca, _ = sbx_crossover(pa, pa2, nc)
+                cb, _ = sbx_crossover(pb, pb2, nc)
                             
                 ca = polynomial_mutation(ca,nm, polynomial_all_gen)
                 cb = polynomial_mutation(cb,nm, polynomial_all_gen)   
