@@ -7,6 +7,25 @@ import os
 
 path = os.path.dirname(os.path.realpath(__file__))
 
+# %%
+# ci_h = loadmat("../references/CEC17/Tasks/CI_H.mat")
+# ci_m = loadmat("../references/CEC17/Tasks/CI_M.mat")
+# ci_l = loadmat("../references/CEC17/Tasks/CI_L.mat")
+# pi_h = loadmat("../references/CEC17/Tasks/PI_H.mat")
+# pi_m = loadmat("../references/CEC17/Tasks/PI_M.mat")
+# pi_l = loadmat("../references/CEC17/Tasks/PI_L.mat")
+# ni_h = loadmat("../references/CEC17/Tasks/NI_H.mat")
+# ni_m = loadmat("../references/CEC17/Tasks/NI_M.mat")
+# ni_l = loadmat("../references/CEC17/Tasks/NI_L.mat")
+
+
+
+# %%
+# pi_h.get("GO_Task2")
+
+
+
+
 class GECCO20_benchmark_50tasks():
     tasks_size = 50
     dim = 50
