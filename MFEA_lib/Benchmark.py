@@ -1,6 +1,6 @@
 from numpy.random.mtrand import choice
 from numpy import loadtxt
-from .func import sphere, weierstrass, ackley, rosenbrock, schwefel, griewank, rastrigin
+from .function import sphere, weierstrass, ackley, rosenbrock, schwefel, griewank, rastrigin
 import pandas as pd
 from scipy.io import loadmat
 import os
