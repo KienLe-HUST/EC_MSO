@@ -1,3 +1,4 @@
+import numpy as np
 from .GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task, polynomial_mutation, sbx_crossover
 
 class AbstractModel():
@@ -12,4 +13,9 @@ class AbstractModel():
     def compile(self):
         pass
     def fit(self, tasks = []):
-        pass
+        # initial history of factorial cost -> for render
+        history_cost = np.empty((0, len(tasks)), np.float) 
+
+        max_d = max([t.dim for t in tasks])
+        
+        
