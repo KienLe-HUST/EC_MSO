@@ -27,10 +27,10 @@ path = os.path.dirname(os.path.realpath(__file__))
 
 
 class GECCO20_benchmark_50tasks():
-    tasks_size = 50
+    task_size = 50
     dim = 50
 
-    def get_choice_function(self, ID) -> list[int]:
+    def get_choice_function(ID) -> list[int]:
         choice_functions = []
         if ID == 1:
             choice_functions = [1]
@@ -56,12 +56,12 @@ class GECCO20_benchmark_50tasks():
             raise ValueError("Invalid input: ID should be in [1,10]")
         return choice_functions
 
-    def get_items(self, ID) -> list[AbstractFunc]:
-        choice_functions = self.get_choice_function(ID)
+    def get_items(ID) -> list[AbstractFunc]:
+        choice_functions = __class__.get_choice_function(ID)
 
         tasks = []
 
-        for task_id in range(self.task_size):
+        for task_id in range(__class__.task_size):
             func_id = choice_functions[task_id % len(choice_functions)]
             file_dir = path + "/references/GECCO20/Tasks/benchmark_" + str(ID)
             shift_file = "/bias_" + str(task_id + 1)
@@ -71,42 +71,42 @@ class GECCO20_benchmark_50tasks():
 
             if func_id == 1:
                 tasks.append(
-                    Sphere(self.dim, shift= shift, rotation_matrix= matrix,
+                    Sphere(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -100, upper_bound= 100)
                 )
             elif func_id == 2:
                 tasks.append(
-                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 2:
                 tasks.append(
-                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 3:
                 tasks.append(
-                    Ackley(self.dim, shift= shift, rotation_matrix= matrix,
+                    Ackley(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 4:
                 tasks.append(
-                    Rastrigin(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rastrigin(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 5:
                 tasks.append(
-                    Griewank(self.dim, shift= shift, rotation_matrix= matrix,
+                    Griewank(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -100, upper_bound= 100)
                 )
             elif func_id == 6:
                 tasks.append(
-                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -0.5, upper_bound= 0.5)
                 )
             elif func_id == 7:
                 tasks.append(
-                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -500, upper_bound= 500)
                 )
         return tasks    

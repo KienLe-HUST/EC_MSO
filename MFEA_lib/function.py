@@ -4,11 +4,11 @@ class AbstractFunc():
     limited_space = False
     upper_bound = None
     lower_bound = None
+    global_optimal = 0
 
     def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, 
                 limited_space: bool = False, lower_bound = None, upper_bound = None):
         self.dim = dim
-        #NOTE
         self.name = self.__class__.__name__ + ': [' + str(lower_bound) + ', ' + str(upper_bound) + ']^' + str(dim)
 
         if rotation_matrix is not None:
@@ -22,6 +22,8 @@ class AbstractFunc():
         tmp = np.array(shift).reshape(-1, )
         assert dim % len(tmp) == 0
         self.shift = np.array([[i] * int(dim / len(tmp)) for i in tmp ]).reshape(-1, )
+
+        self.global_optimal = np.array([self.global_optimal] * dim) + self.shift
 
         if limited_space == True:
             if lower_bound is not None and upper_bound is not None:
