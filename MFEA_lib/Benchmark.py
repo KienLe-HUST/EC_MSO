@@ -118,10 +118,10 @@ class CEC17_benchmark():
         Sphere(     50,shift= 80,   limited_space= True, lower_bound= -100, upper_bound= 100),  # 80
         Sphere(     50,shift= -80,  limited_space= True, lower_bound= -100, upper_bound= 100), # -80
         Weierstrass(25,shift= -0.4, limited_space= True, lower_bound= -0.5, upper_bound= 0.5), # -0.4
-        Rosenbrock( 50,shift= 0,   limited_space= True, lower_bound= -50, upper_bound= 50),# 0
+        Rosenbrock( 50,shift= -1,   limited_space= True, lower_bound= -50, upper_bound= 50),# 0
         Ackley(     50,shift= 40,   limited_space= True, lower_bound= -50, upper_bound= 50),    # 40
         Weierstrass(50,shift= -0.4, limited_space= True, lower_bound= -0.5, upper_bound= 0.5), # -0.4
-        Schwefel(   50,shift= 420.9687,    limited_space= True, lower_bound= -500, upper_bound= 500), # 420.9687
+        Schwefel(   50,shift= 0,    limited_space= True, lower_bound= -500, upper_bound= 500), # 420.9687
         Griewank(   50,shift= [-80, 80],limited_space= True, lower_bound= -100, upper_bound= 100), # -80, 80
         Rastrigin(  50,shift= [40, -40],limited_space= True, lower_bound= -50, upper_bound= 50),# -40, 40
         ]
