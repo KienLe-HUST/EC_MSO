@@ -1,5 +1,5 @@
 import numpy as np
-
+ 
 def population_init(N, num_tasks, d, min_val = 0, max_val = 1):
     '''
     pop.shape = (N * num_tasks, d)
