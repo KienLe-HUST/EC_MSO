@@ -1,6 +1,6 @@
 from numpy.random.mtrand import choice
 from numpy import loadtxt
-from .function import sphere, weierstrass, ackley, rosenbrock, schwefel, griewank, rastrigin
+from .function import AbstractFunc, Sphere, Weierstrass, Ackley, Rosenbrock, Schwefel, Griewank, Rastrigin
 import pandas as pd
 from scipy.io import loadmat
 import os
@@ -30,7 +30,7 @@ class GECCO20_benchmark_50tasks():
     tasks_size = 50
     dim = 50
 
-    def get_choice_function(self, ID):
+    def get_choice_function(self, ID) -> list[int]:
         choice_functions = []
         if ID == 1:
             choice_functions = [1]
@@ -56,7 +56,7 @@ class GECCO20_benchmark_50tasks():
             raise ValueError("Invalid input: ID should be in [1,10]")
         return choice_functions
 
-    def get_items(self, ID):
+    def get_items(self, ID) -> list[AbstractFunc]:
         choice_functions = self.get_choice_function(ID)
 
         tasks = []
@@ -71,62 +71,62 @@ class GECCO20_benchmark_50tasks():
 
             if func_id == 1:
                 tasks.append(
-                    sphere(self.dim, shift= shift, rotation_matrix= matrix,
+                    Sphere(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -100, upper_bound= 100)
                 )
             elif func_id == 2:
                 tasks.append(
-                    rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 2:
                 tasks.append(
-                    rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 3:
                 tasks.append(
-                    ackley(self.dim, shift= shift, rotation_matrix= matrix,
+                    Ackley(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 4:
                 tasks.append(
-                    rastrigin(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rastrigin(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -50, upper_bound= 50)
                 )
             elif func_id == 5:
                 tasks.append(
-                    griewank(self.dim, shift= shift, rotation_matrix= matrix,
+                    Griewank(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -100, upper_bound= 100)
                 )
             elif func_id == 6:
                 tasks.append(
-                    rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -0.5, upper_bound= 0.5)
                 )
             elif func_id == 7:
                 tasks.append(
-                    rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
+                    Rosenbrock(self.dim, shift= shift, rotation_matrix= matrix,
                     limited_space= True, lower_bound= -500, upper_bound= 500)
                 )
         return tasks    
 
 class CEC17_benchmark():
-    def get_10tasks_benchmark(self):
+    def get_10tasks_benchmark()-> list[AbstractFunc]:
         tasks = [
-        sphere(     50,shift= 0,    limited_space= True, lower_bound= -100, upper_bound= 100),   # 0
-        sphere(     50,shift= 80,   limited_space= True, lower_bound= -100, upper_bound= 100),  # 80
-        sphere(     50,shift= -80,  limited_space= True, lower_bound= -100, upper_bound= 100), # -80
-        weierstrass(25,shift= -0.4, limited_space= True, lower_bound= -0.5, upper_bound= 0.5), # -0.4
-        rosenbrock( 50,shift= 0,   limited_space= True, lower_bound= -50, upper_bound= 50),# 0
-        ackley(     50,shift= 40,   limited_space= True, lower_bound= -50, upper_bound= 50),    # 40
-        weierstrass(50,shift= -0.4, limited_space= True, lower_bound= -0.5, upper_bound= 0.5), # -0.4
-        schwefel(   50,shift= 420.9687,    limited_space= True, lower_bound= -500, upper_bound= 500), # 420.9687
-        griewank(   50,shift= [-80, 80],limited_space= True, lower_bound= -100, upper_bound= 100), # -80, 80
-        rastrigin(  50,shift= [40, -40],limited_space= True, lower_bound= -50, upper_bound= 50),# -40, 40
+        Sphere(     50,shift= 0,    limited_space= True, lower_bound= -100, upper_bound= 100),   # 0
+        Sphere(     50,shift= 80,   limited_space= True, lower_bound= -100, upper_bound= 100),  # 80
+        Sphere(     50,shift= -80,  limited_space= True, lower_bound= -100, upper_bound= 100), # -80
+        Weierstrass(25,shift= -0.4, limited_space= True, lower_bound= -0.5, upper_bound= 0.5), # -0.4
+        Rosenbrock( 50,shift= 0,   limited_space= True, lower_bound= -50, upper_bound= 50),# 0
+        Ackley(     50,shift= 40,   limited_space= True, lower_bound= -50, upper_bound= 50),    # 40
+        Weierstrass(50,shift= -0.4, limited_space= True, lower_bound= -0.5, upper_bound= 0.5), # -0.4
+        Schwefel(   50,shift= 420.9687,    limited_space= True, lower_bound= -500, upper_bound= 500), # 420.9687
+        Griewank(   50,shift= [-80, 80],limited_space= True, lower_bound= -100, upper_bound= 100), # -80, 80
+        Rastrigin(  50,shift= [40, -40],limited_space= True, lower_bound= -50, upper_bound= 50),# -40, 40
         ]
         return tasks
 
-    def get_2tasks_benchmark(self, ID):
+    def get_2tasks_benchmark(ID)-> list[AbstractFunc]:
         #TODO
         pass

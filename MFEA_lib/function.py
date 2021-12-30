@@ -4,13 +4,12 @@ class AbstractFunc():
     limited_space = False
     upper_bound = None
     lower_bound = None
-    name = ''
 
-    def __init__(self, dim, shift = 0, rotation_matrix: np.ndarray = None, 
+    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, 
                 limited_space: bool = False, lower_bound = None, upper_bound = None):
         self.dim = dim
         #NOTE
-        self.name = self.__class__.name
+        self.name = self.__class__.__name__ + ': [' + str(lower_bound) + ', ' + str(upper_bound) + ']^' + str(dim)
 
         if rotation_matrix is not None:
             assert np.all(np.array(rotation_matrix.shape) == dim)
@@ -20,8 +19,8 @@ class AbstractFunc():
             self.rotation_matrix = np.identity(dim)
             self.inv_rotation_matrix = np.identity(dim)
         
-        tmp = np.array(shift)
-        assert dim % len(shift) == 0
+        tmp = np.array(shift).reshape(-1, )
+        assert dim % len(tmp) == 0
         self.shift = np.array([[i] * int(dim / len(tmp)) for i in tmp ]).reshape(-1, )
 
         if limited_space == True:
@@ -76,11 +75,11 @@ class Weierstrass(AbstractFunc):
         '''
         x = self.decode(x)
         left = 0
-        for i in range(self.d):
+        for i in range(self.dim):
             left += np.sum(self.a ** np.arange(self.k_max) * \
                 np.cos(2*np.pi * self.b ** np.arange(self.k_max) * (x[i]  + 0.5)))
             
-        right = self.d * np.sum(self.a ** np.arange(self.k_max) * \
+        right = self.dim * np.sum(self.a ** np.arange(self.k_max) * \
             np.cos(2 * np.pi * self.b ** np.arange(self.k_max) * 0.5)
         )
         return left - right
@@ -101,21 +100,21 @@ class Ackley(AbstractFunc):
 
 class Rosenbrock(AbstractFunc):
     '''
-    global optima = 0^d
+    global optima = 1^d
     '''
     def func(self, x):
-        x = self.decode(x) + 1
+        x = self.decode(x)
         l = 100*np.sum((np.delete(x, 0, 0) - np.delete(x, -1, 0 )**2) ** 2)
         r = np.sum((np.delete(x, -1, 0) - 1) ** 2)
         return l + r
 
 class Schwefel(AbstractFunc):
     '''
-    global optima = 0^d
+    global optima = 420.9687^d
     '''
     def func(self, x):
-        x = self.decode(x) + 420.9687
-        return 418.9829*self.d - np.sum(x * np.sin(np.sqrt(np.abs(x))))
+        x = self.decode(x)
+        return 418.9829*self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x))))
     
 class Griewank(AbstractFunc):
     ''' 
@@ -124,7 +123,7 @@ class Griewank(AbstractFunc):
     def func(self, x):
         x = self.decode(x)
         return np.sum(x**2) / 4000 \
-            - np.prod(np.cos(x / np.sqrt((np.arange(self.d) + 1)))) + 1
+            - np.prod(np.cos(x / np.sqrt((np.arange(self.dim) + 1)))) + 1
 
 class Rastrigin(AbstractFunc):
     ''' 
@@ -133,5 +132,5 @@ class Rastrigin(AbstractFunc):
     def func(self, x):
         x = self.decode(x)
         
-        return 10 * self.d + np.sum(x ** 2 - 10 * np.cos(2 * np.pi * x))
+        return 10 * self.dim + np.sum(x ** 2 - 10 * np.cos(2 * np.pi * x))
 

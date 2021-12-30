@@ -2,7 +2,7 @@ from typing import List, Tuple
 import numpy as np
 from .operators import CrossOver, Mutation, Selection
 from .function import AbstractFunc
-from .GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task, polynomial_mutation, sbx_crossover
+from .GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task
 import sys
 import matplotlib.pyplot as plt
 
@@ -12,11 +12,22 @@ class AbstractModel():
         self.history_cost: np.ndarray
         self.solve: List[np.ndarray]
         pass
-    def render(self, shape: Tuple[int, int], title = ""):
+    def render(self, shape: Tuple[int, int], title = "", yscale = 'linear'):
         fig = plt.figure(figsize= (shape[1]* 6, shape[0] * 5))
         fig.suptitle(title, size = 20)
         fig.set_facecolor("white")
-        pass
+
+        for i in range(self.history_cost.shape[1]):
+            plt.subplot(shape[0], shape[1], i+1)
+
+            plt.plot(np.arange(self.history_cost.shape[0]), self.history_cost[:, i])
+
+            plt.title(self.tasks[i].name)
+            plt.xlabel("Generations")
+            plt.ylabel("Factorial Cost")
+            plt.yscale(yscale)
+        plt.show()
+        return fig
     def save(self, PATH):
         pass
     def compile(self, cross_over: CrossOver.AbstractCrossOver, mutation: Mutation.AbstractMutation, selection: Selection.AbstractSelection):
@@ -39,6 +50,7 @@ class MFEA_base(AbstractModel):
             one_line = False, num_epochs_printed = 20):
         
         assert num_generations > num_epochs_printed
+        self.tasks = tasks
 
         # initial history of factorial cost -> for render
         self.history_cost = np.empty((0, len(tasks)), np.float) 
@@ -97,10 +109,8 @@ class MFEA_base(AbstractModel):
             pop_fcost = np.append(pop_fcost, offspring_fcost, axis = 0)
 
             # selection
-            idx = self.selection(nb_each_task= num_inds_each_task,
-                    skill_factor_arr= skill_factor_arr,
-                    pop_fcost= pop_fcost,
-                    nb_tasks= len(tasks))
+            pop_fitness = 1/factorial_rank(pop_fcost, skill_factor_arr, len(tasks))
+            idx = self.selection(skill_factor_arr, pop_fitness, [num_inds_each_task] * len(tasks))
 
             population = population[idx]
             skill_factor_arr = skill_factor_arr[idx]
