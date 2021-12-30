@@ -6,10 +6,8 @@ class AbstractFunc():
     lower_bound = None
     global_optimal = 0
 
-    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, 
-                limited_space: bool = False, lower_bound = None, upper_bound = None):
+    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, bound: tuple = None):
         self.dim = dim
-        self.name = self.__class__.__name__ + ': [' + str(lower_bound) + ', ' + str(upper_bound) + ']^' + str(dim)
 
         if rotation_matrix is not None:
             assert np.all(np.array(rotation_matrix.shape) == dim)
@@ -24,14 +22,13 @@ class AbstractFunc():
         self.shift = np.array([[i] * int(dim / len(tmp)) for i in tmp ]).reshape(-1, )
 
         self.global_optimal = np.array([self.global_optimal] * dim) + self.shift
-
-        if limited_space == True:
-            if lower_bound is not None and upper_bound is not None:
-                self.limited_space = limited_space
-                self.lower_bound = lower_bound
-                self.upper_bound = upper_bound
-            else:
-                raise Exception("Limitted spacce must have both inf and sup val")
+        
+        if bound is not None:
+            self.limited_space = True
+            self.lower_bound, self.upper_bound = bound
+            self.name = self.__class__.__name__ + ': [' + str(self.lower_bound) + ', ' + str(self.upper_bound) + ']^' + str(dim)
+        else:
+            self.name = self.__class__.__name__ + ': R^' + str(dim)
 
     def encode(self, x):
         '''

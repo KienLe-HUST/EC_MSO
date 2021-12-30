@@ -15,6 +15,8 @@ class Polynomial_Mutation(AbstractMutation):
         self.mutate_all_dimensions = mutate_all_dimensions
     
     def __call__(self, p) -> np.ndarray:
+        super().__call__(p)
+
         ind = np.copy(p)
 
         if self.mutate_all_dimensions:

@@ -4,7 +4,7 @@ from ..GA import factorial_rank
 class AbstractSelection():
     def __init__(self):
         pass
-    def __call__(self) -> np.ndarray:
+    def __call__(self, skill_factor_arr, pop_fitness, nb_inds_tasks: np.ndarray) -> np.ndarray:
         pass
 
 class ElitismSelection(AbstractSelection):
