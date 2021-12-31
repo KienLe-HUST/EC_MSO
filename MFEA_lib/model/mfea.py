@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Tuple
 import numpy as np
 from ..operators import CrossOver, Mutation, Selection
 from ..tasks.function import AbstractFunc
@@ -39,8 +39,8 @@ class AbstractModel():
         self.cross_over = cross_over
         self.mutation = mutation
         self.selection = selection      
-    def fit(self, tasks: List[AbstractFunc], num_generations, num_inds_each_task = 100, range_init_pop = [0, 1], evaluate_initial_skillFactor = True,
-            log_oneline = False, num_epochs_printed = 20) -> tuple[list[np.ndarray], np.ndarray]:
+    def fit(self, tasks: list[AbstractFunc], num_generations, num_inds_each_task = 100,  evaluate_initial_skillFactor = True,
+            range_init_pop = [0, 1], log_oneline = False, num_epochs_printed = 20) -> tuple[list[np.ndarray], np.ndarray]:
         assert num_generations > num_epochs_printed
         self.tasks = tasks
 
@@ -52,7 +52,7 @@ class MFEA_base(AbstractModel):
     def compile(self, cross_over = CrossOver.SBX_CrossOver(), mutation=  Mutation.Polynomial_Mutation(), selection= Selection.ElitismSelection()):
         super().compile(cross_over, mutation, selection)
 
-    def fit(self, tasks: List[AbstractFunc], num_generations, num_inds_each_task = 100, rmp = 0.3, range_init_pop = [0, 1], evaluate_initial_skillFactor = True,
+    def fit(self, tasks: list[AbstractFunc], num_generations, num_inds_each_task = 100, rmp = 0.3, range_init_pop = [0, 1], evaluate_initial_skillFactor = True,
             log_oneline = False, num_epochs_printed = 20) -> tuple[list[np.ndarray], np.ndarray]:
         
         super().fit(tasks, num_generations, num_inds_each_task=num_inds_each_task, range_init_pop=range_init_pop, evaluate_initial_skillFactor=evaluate_initial_skillFactor, 
@@ -148,7 +148,7 @@ class MFEA1(AbstractModel):
     def compile(self, cross_over = CrossOver.SBX_CrossOver(), mutation=  Mutation.Polynomial_Mutation(), selection= Selection.ElitismSelection()):
         return super().compile(cross_over, mutation, selection)
     
-    def fit(self, tasks: List[AbstractFunc], num_generations, num_inds_each_task=100, rmp = 0.3, range_init_pop=[0, 1], evaluate_initial_skillFactor=True, 
+    def fit(self, tasks: list[AbstractFunc], num_generations, num_inds_each_task=100, rmp = 0.3, range_init_pop=[0, 1], evaluate_initial_skillFactor=True, 
             log_oneline =False, num_epochs_printed=20) -> tuple[list[np.ndarray], np.ndarray]:   
                 
         super().fit(tasks, num_generations, num_inds_each_task=num_inds_each_task, range_init_pop=range_init_pop, evaluate_initial_skillFactor=evaluate_initial_skillFactor, 

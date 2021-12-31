@@ -50,6 +50,8 @@ class AbstractFunc():
         x_decode = self.rotation_matrix @ (x_decode - self.shift) 
         return x_decode
 
+    def func(self, x):
+        pass
 class Sphere(AbstractFunc):
     '''
     global optima = 0^d
