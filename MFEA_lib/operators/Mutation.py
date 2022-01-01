@@ -29,6 +29,7 @@ class Polynomial_Mutation(AbstractMutation):
                 delta_r = 1 - (2*(1-u))**(1/(self.nm + 1))
                 ind = ind + delta_r * (1 - ind)
         else:
+            # NOTE
             for i in range(len(ind)):
                 if np.random.uniform() < 1/len(ind):
                     u = np.random.uniform()

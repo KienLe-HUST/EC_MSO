@@ -180,12 +180,20 @@ class MFEA1(AbstractModel):
         )
 
         for epoch in range(num_generations):
+            # selection
+            pop_fitness = 1/factorial_rank(pop_fcost, skill_factor_arr, len(tasks))
+            idx = self.selection(skill_factor_arr, pop_fitness, [num_inds_each_task / 2] * len(tasks))
+
+            population = population[idx]
+            skill_factor_arr = skill_factor_arr[idx]
+            pop_fcost = pop_fcost[idx]
+
             # initial offspring of generation
             offspring = np.empty((0, dim_uss))
             offspring_skill_factor = np.empty((0, ), np.int)
             offspring_fcost = np.empty((0, ))
 
-            while len(offspring) < len(population):
+            while len(offspring) < num_inds_each_task * len(tasks):
                 [idx_pa, idx_pb] = np.random.choice(len(population), size= 2, replace= False)
                 [pa, pb], [skf_pa, skf_pb] = population[[idx_pa, idx_pb]], skill_factor_arr[[idx_pa, idx_pb]]
 
@@ -231,13 +239,7 @@ class MFEA1(AbstractModel):
             skill_factor_arr = np.append(skill_factor_arr, offspring_skill_factor, axis = 0)
             pop_fcost = np.append(pop_fcost, offspring_fcost, axis = 0)
 
-            # selection
-            pop_fitness = 1/factorial_rank(pop_fcost, skill_factor_arr, len(tasks))
-            idx = self.selection(skill_factor_arr, pop_fitness, [num_inds_each_task] * len(tasks))
 
-            population = population[idx]
-            skill_factor_arr = skill_factor_arr[idx]
-            pop_fcost = pop_fcost[idx]
 
             #save history
             self.history_cost = np.append(self.history_cost, 
