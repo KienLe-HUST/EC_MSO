@@ -10,7 +10,7 @@ class AbstractModel():
 
     def __init__(self) -> None:
         self.history_cost: np.ndarray
-        self.solve: List[np.ndarray]
+        self.solve: list[np.ndarray]
         pass
     def render(self, shape: Tuple[int, int], title = "", yscale = None, ylim: list[float, float] = None):
         fig = plt.figure(figsize= (shape[1]* 6, shape[0] * 5))
@@ -33,8 +33,6 @@ class AbstractModel():
                 
         plt.show()
         return fig
-    def save(self, PATH):
-        pass
     def compile(self, cross_over: CrossOver.AbstractCrossOver, mutation: Mutation.AbstractMutation, selection: Selection.AbstractSelection):
         self.cross_over = cross_over
         self.mutation = mutation
