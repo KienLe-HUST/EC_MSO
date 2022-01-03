@@ -124,7 +124,8 @@ class Griewank(AbstractFunc):
     def func(self, x):
         x = self.decode(x)
         return np.sum(x**2) / 4000 \
-            - np.prod(np.cos(x / np.sqrt((np.arange(self.dim) + 1)))) + 1
+            - np.prod(np.cos(x / np.sqrt((np.arange(self.dim) + 1))))\
+            + 1
 
 class Rastrigin(AbstractFunc):
     ''' 

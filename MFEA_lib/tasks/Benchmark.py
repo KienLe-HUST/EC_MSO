@@ -77,10 +77,6 @@ class GECCO20_benchmark_50tasks():
                 tasks.append(
                     Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-50, 50])
                 )
-            elif func_id == 2:
-                tasks.append(
-                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-50, 50])
-                )
             elif func_id == 3:
                 tasks.append(
                     Ackley(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-50, 50])
