@@ -38,8 +38,8 @@ def compareModel(models: list, tasks: list[AbstractFunc], shape:tuple = None, la
 
     if upper_generation is None:
         upper_generation = min([len(m.history_cost) for m in models])
-
-    print(shape[0], shape[1])
+    else:
+        upper_generation = min(upper_generation + 1, min([len(m.history_cost) for m in models]) + 1)
 
     for idx_t, task in enumerate(tasks):
         for idx_m, model in enumerate(models):

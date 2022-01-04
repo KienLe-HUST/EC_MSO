@@ -89,9 +89,13 @@ class MFEA_base(AbstractModel):
                 [idx_a, idx_b] = np.random.choice(len(population), size= 2, replace= False)
                 [pa, pb], [skf_pa, skf_pb] = population[[idx_a, idx_b]], skill_factor_arr[[idx_a, idx_b]]
 
-                if skf_pa == skf_pb or np.random.uniform() < rmp:
-                    # intra, inter - crossover
-                    oa, ob = self.cross_over(pa, pb)
+                if skf_pa == skf_pb:
+                    # intra - crossover
+                    oa, ob = self.cross_over(pa, pb, type = 'intra')
+                    skf_oa, skf_ob = np.random.choice([skf_pa, skf_pb], size= 2, replace= True)
+                elif np.random.uniform() < rmp:
+                    # inter - crossover
+                    oa, ob = self.cross_over(pa, pb, type = 'inter')
                     skf_oa, skf_ob = np.random.choice([skf_pa, skf_pb], size= 2, replace= True)
                 else:
                     # mutation
@@ -178,13 +182,6 @@ class MFEA1(AbstractModel):
         )
 
         for epoch in range(num_generations):
-            # selection
-            pop_fitness = 1/factorial_rank(pop_fcost, skill_factor_arr, len(tasks))
-            idx = self.selection(skill_factor_arr, pop_fitness, [num_inds_each_task / 2] * len(tasks))
-
-            population = population[idx]
-            skill_factor_arr = skill_factor_arr[idx]
-            pop_fcost = pop_fcost[idx]
 
             # initial offspring of generation
             offspring = np.empty((0, dim_uss))
@@ -197,12 +194,12 @@ class MFEA1(AbstractModel):
 
                 if skf_pa == skf_pb:
                     # Intra crossover
-                    oa, ob = self.cross_over(pa, pb)
+                    oa, ob = self.cross_over(pa, pb, type = 'intra')
                     skf_oa, skf_ob = skf_pa, skf_pa
                 
                 elif np.random.uniform() < rmp:
                     # Inter crossover
-                    oa, ob = self.cross_over(pa, pb)
+                    oa, ob = self.cross_over(pa, pb, type = 'inter')
                     skf_oa, skf_ob = skf_pa, skf_pa
                 
                 else:
@@ -218,8 +215,8 @@ class MFEA1(AbstractModel):
                     pa2 = population[idx_pa2]
                     pb2 = population[idx_pb2]
 
-                    oa, _ = self.cross_over(pa, pa2)
-                    ob, _ = self.cross_over(pb, pb2)
+                    oa, _ = self.cross_over(pa, pa2, type = 'inter')
+                    ob, _ = self.cross_over(pb, pb2, type = 'inter')
 
                     skf_oa, skf_ob = skf_pa, skf_pb
                 
@@ -237,7 +234,13 @@ class MFEA1(AbstractModel):
             skill_factor_arr = np.append(skill_factor_arr, offspring_skill_factor, axis = 0)
             pop_fcost = np.append(pop_fcost, offspring_fcost, axis = 0)
 
+            # selection
+            pop_fitness = 1/factorial_rank(pop_fcost, skill_factor_arr, len(tasks))
+            idx = self.selection(skill_factor_arr, pop_fitness, [num_inds_each_task] * len(tasks))
 
+            population = population[idx]
+            skill_factor_arr = skill_factor_arr[idx]
+            pop_fcost = pop_fcost[idx]
 
             #save history
             self.history_cost = np.append(self.history_cost, 

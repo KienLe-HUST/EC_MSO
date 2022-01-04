@@ -19,7 +19,7 @@ class SBX_CrossOver(AbstractCrossOver):
         type = 'inter' / 'intra'
         '''
         assert type == 'inter' or type == 'intra' or type is None
-        u = np.random.uniform(size = len(pa))
+        u = np.random.rand(len(pa))
 
         beta = np.where(u < 0.5, (2*u)**(1/(self.nc +1)), (2 * (1 - u))**(-1 / (1 + self.nc)))
             
