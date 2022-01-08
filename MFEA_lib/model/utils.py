@@ -2,6 +2,7 @@ import pickle
 import matplotlib.pyplot as plt
 import numpy as np
 from ..tasks.function import AbstractFunc
+from ..model.mfea import AbstractModel
 
 def saveModel(model, PATH: str):
     '''
@@ -11,7 +12,7 @@ def saveModel(model, PATH: str):
     pickle.dump(model, f)
     f.close()
     return 'Saved'
-def loadModel(PATH: str):
+def loadModel(PATH: str) -> AbstractModel:
     '''
     `.mso`
     '''

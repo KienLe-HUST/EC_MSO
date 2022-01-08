@@ -50,3 +50,7 @@ class Polynomial_Mutation(AbstractMutation):
             )
 
         return ind
+
+class NoMutation(AbstractMutation):
+    def __call__(self, p) -> np.ndarray:
+        return p

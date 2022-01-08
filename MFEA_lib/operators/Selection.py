@@ -19,9 +19,10 @@ class ElitismSelection(AbstractSelection):
         idx_selected_inds = np.empty((0,), dtype= int )
         
         for i in range (len(nb_inds_tasks)):
-            N_i = np.int(nb_inds_tasks[i])
-
             idx_inds_i = np.where(skill_factor_arr == i)[0]
+
+            N_i = min(np.int(nb_inds_tasks[i]), len(idx_inds_i))
+            
             sorted_idx = idx_inds_i[np.argsort(-pop_fitness[idx_inds_i])]
             idx_selected_inds = np.append(idx_selected_inds, sorted_idx[:N_i], axis = 0)
 
