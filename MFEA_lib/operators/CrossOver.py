@@ -16,14 +16,18 @@ class SBX_CrossOver(AbstractCrossOver):
         self.nc = nc
     def __call__(self, pa, pb, type = None) -> Tuple[np.ndarray, np.ndarray]:
         '''
-        type = 'inter' / 'intra'
+        type = 'inter' / 'intra' / ('inter1skf', p_swap_inter)
         '''
-        assert type == 'inter' or type == 'intra' or type == 'inter1skf' or type is None
+        assert type == 'inter' or type == 'intra' or type[0] == 'inter1skf' or type is None
+
         u = np.random.rand(len(pa))
 
+        # ~1
         beta = np.where(u < 0.5, (2*u)**(1/(self.nc +1)), (2 * (1 - u))**(-1 / (1 + self.nc)))
-            
+        
+        #like pa
         c1 = 0.5*((1 + beta) * pa + (1 - beta) * pb)
+        #like pb
         c2 = 0.5*((1 - beta) * pa + (1 + beta) * pb)
 
         c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
@@ -31,8 +35,10 @@ class SBX_CrossOver(AbstractCrossOver):
         if type == 'intra':
             idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
             c1[idx], c2[idx] = c2[idx], c1[idx]
-        elif type == 'inter1skf':
-            idx = np.where(np.random.rand(len(pa)) < 1/len(pa))[0]
+            
+        elif type[0] == 'inter1skf':
+            p_swap_inter = type[1]
+            idx = np.where(np.random.rand(len(pa)) < p_swap_inter)[0]
             c2[idx] = c1[idx]
 
         return c1, c2

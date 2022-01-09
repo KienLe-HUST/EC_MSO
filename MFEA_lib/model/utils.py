@@ -46,13 +46,13 @@ def compareModel(models: list, tasks: list[AbstractFunc], shape:tuple = None, la
         for idx_m, model in enumerate(models):
             plt.subplot(shape[0], shape[1], idx_t + 1)
 
-            plt.plot(np.arange(0, upper_generation, step), 
-                        model.history_cost[np.arange(0, upper_generation, step), idx_t],
+            plt.plot(np.append(np.arange(0, upper_generation, step), np.array([upper_generation - 1])), 
+                        model.history_cost[np.append(np.arange(0, upper_generation, step), np.array([upper_generation - 1])), idx_t],
                     label = label_legend[idx_m]
             )
             if step != 1:
-                plt.scatter(np.arange(0, upper_generation, step), 
-                        model.history_cost[np.arange(0, upper_generation, step), idx_t]
+                plt.scatter(np.append(np.arange(0, upper_generation, step), np.array([upper_generation - 1])), 
+                        model.history_cost[np.append(np.arange(0, upper_generation, step), np.array([upper_generation - 1])), idx_t]
                 )
             plt.legend()
         

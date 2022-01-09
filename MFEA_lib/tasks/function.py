@@ -50,13 +50,15 @@ class AbstractFunc():
         x_decode = self.rotation_matrix @ (x_decode - self.shift) 
         return x_decode
 
-    def func(self, x):
+    def __call__(self, x):
         pass
+    def func(self, x):
+        return self(x)
 class Sphere(AbstractFunc):
     '''
     global optima = 0^d
     '''
-    def func(self, x):
+    def __call__(self, x):
         '''
         Request: input x is encoded
         '''
@@ -70,7 +72,7 @@ class Weierstrass(AbstractFunc):
     a = 0.5
     b = 3
     k_max = 21
-    def func(self, x):
+    def __call__(self, x):
         '''
         Request: input x is encoded
         '''
@@ -92,7 +94,7 @@ class Ackley(AbstractFunc):
     a = 20
     b = 0.2
     c = 2*np.pi 
-    def func(self, x):
+    def __call__(self, x):
         x = self.decode(x)
         return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
         - np.exp(np.average(np.cos(self.c * x)))\
@@ -103,7 +105,7 @@ class Rosenbrock(AbstractFunc):
     '''
     global optima = 1^d
     '''
-    def func(self, x):
+    def __call__(self, x):
         x = self.decode(x)
         l = 100*np.sum((np.delete(x, 0, 0) - np.delete(x, -1, 0 )**2) ** 2)
         r = np.sum((np.delete(x, -1, 0) - 1) ** 2)
@@ -113,7 +115,7 @@ class Schwefel(AbstractFunc):
     '''
     global optima = 420.9687^d
     '''
-    def func(self, x):
+    def __call__(self, x):
         x = self.decode(x)
         return 418.9829*self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x))))
     
@@ -121,7 +123,7 @@ class Griewank(AbstractFunc):
     ''' 
     global optima = [0] ^ d
     '''
-    def func(self, x):
+    def __call__(self, x):
         x = self.decode(x)
         return np.sum(x**2) / 4000 \
             - np.prod(np.cos(x / np.sqrt((np.arange(self.dim) + 1))))\
@@ -131,7 +133,7 @@ class Rastrigin(AbstractFunc):
     ''' 
     global optima = 0 ^ d
     '''
-    def func(self, x):
+    def __call__(self, x):
         x = self.decode(x)
         
         return 10 * self.dim + np.sum(x ** 2 - 10 * np.cos(2 * np.pi * x))

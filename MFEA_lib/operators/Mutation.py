@@ -13,7 +13,6 @@ class Polynomial_Mutation(AbstractMutation):
     def __init__(self, nm = 15, mutate_all_dimensions:bool = False):
         self.nm = nm
         self.mutate_all_dimensions = mutate_all_dimensions
-        self.type = type
     
     def __call__(self, p) -> np.ndarray:
         super().__call__(p)
