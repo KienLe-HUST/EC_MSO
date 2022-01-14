@@ -100,21 +100,23 @@ class GECCO20_benchmark_50tasks():
         return tasks    
 
 class CEC17_benchmark():
-    def get_10tasks_benchmark()-> list[AbstractFunc]:
+    def get_10tasks_benchmark(fix = False)-> list[AbstractFunc]:
         tasks = [
         Sphere(     50,shift= 0,    bound= [-100, 100]),   # 0
         Sphere(     50,shift= 80,   bound= [-100, 100]),  # 80
         Sphere(     50,shift= -80,  bound= [-100, 100]), # -80
         Weierstrass(25,shift= -0.4, bound= [-0.5, 0.5]), # -0.4
         Rosenbrock( 50,shift= -1,   bound= [-50, 50]),# 0
-        Ackley(     50,shift= 40,   bound= [-50, 50]),    # 40
+        Ackley(     50,shift= 40,   bound= [-50, 50], fixed = fix),    # 40
         Weierstrass(50,shift= -0.4, bound= [-0.5, 0.5]), # -0.4
-        Schwefel(   50,shift= 0,    bound= [-500, 500]), # 420.9687
+        Schwefel(   50,shift= 0,    bound= [-500, 500],fixed = fix), # 420.9687
         Griewank(   50,shift= [-80, 80], bound= [-100, 100]), # -80, 80
         Rastrigin(  50,shift= [40, -40], bound= [-50, 50]),# -40, 40
         ]
         return tasks
 
+
     def get_2tasks_benchmark(ID)-> list[AbstractFunc]:
         #TODO
         pass
+

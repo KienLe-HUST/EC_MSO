@@ -94,12 +94,23 @@ class Ackley(AbstractFunc):
     a = 20
     b = 0.2
     c = 2*np.pi 
+    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, bound: tuple = None, fixed = False):
+        super().__init__(dim, shift, rotation_matrix, bound)
+        # return exact 0 in global optima
+        self.fixed = False
     def __call__(self, x):
         x = self.decode(x)
-        return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
-        - np.exp(np.average(np.cos(self.c * x)))\
-        + self.a\
-        + np.exp(1)
+        if self.fixed:
+            return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
+            - np.exp(np.average(np.cos(self.c * x)))\
+            + self.a\
+            + np.exp(1)\
+            - 4.440892098500626e-16
+        else:
+            return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
+            - np.exp(np.average(np.cos(self.c * x)))\
+            + self.a\
+            + np.exp(1)
 
 class Rosenbrock(AbstractFunc):
     '''
@@ -113,11 +124,20 @@ class Rosenbrock(AbstractFunc):
 
 class Schwefel(AbstractFunc):
     '''
-    global optima = 420.9687^d
+    if fixed: 
+        global optima = 420.968746^d
+    else:
+        global optima = 420.9687^d
     '''
+    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, bound: tuple = None, fixed = False):
+        super().__init__(dim, shift, rotation_matrix, bound)
+        self.fixed = fixed
     def __call__(self, x):
         x = self.decode(x)
-        return 418.9829*self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x)))) 
+        if self.fixed:
+            return (418.9828872724336455576189785193)   *self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x)))) 
+        else:
+            return 418.9829*self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x)))) 
     
 class Griewank(AbstractFunc):
     ''' 

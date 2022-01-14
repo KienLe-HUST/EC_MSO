@@ -14,7 +14,7 @@ class SBX_CrossOver(AbstractCrossOver):
     '''
     def __init__(self, nc = 15):
         self.nc = nc
-    def __call__(self, pa, pb, type = None, p_swap_inter = 0.1) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, type = None, p_swap_inter = 0.1, d_swap = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         '''
         type = 'inter' / 'intra' / ('inter1skf', p_swap_inter)
         '''
@@ -38,6 +38,8 @@ class SBX_CrossOver(AbstractCrossOver):
             
         elif type == 'inter1skf':
             idx = np.where(np.random.rand(len(pa)) < p_swap_inter)[0]
+            # idx = np.where((np.random.rand(len(pa)) < p_swap_inter) * (np.abs(c1 - c2) < d_swap))[0]
+            # idx = np.where(np.abs(pa - pb) > d_swap)[0]
             c2[idx] = c1[idx]
 
         return c1, c2
