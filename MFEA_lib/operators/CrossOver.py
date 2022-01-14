@@ -5,7 +5,7 @@ import numpy as np
 class AbstractCrossOver():
     def __init__(self) -> None:
         pass
-    def __call__(self, pa, pb, type = None) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, type = None, *args) -> Tuple[np.ndarray, np.ndarray]:
         pass
 
 class SBX_CrossOver(AbstractCrossOver):
@@ -14,11 +14,11 @@ class SBX_CrossOver(AbstractCrossOver):
     '''
     def __init__(self, nc = 15):
         self.nc = nc
-    def __call__(self, pa, pb, type = None) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, type = None, p_swap_inter = 0.1) -> Tuple[np.ndarray, np.ndarray]:
         '''
         type = 'inter' / 'intra' / ('inter1skf', p_swap_inter)
         '''
-        assert type == 'inter' or type == 'intra' or type[0] == 'inter1skf' or type is None
+        assert type == 'inter' or type == 'intra' or type == 'inter1skf'
 
         u = np.random.rand(len(pa))
 
@@ -36,8 +36,7 @@ class SBX_CrossOver(AbstractCrossOver):
             idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
             c1[idx], c2[idx] = c2[idx], c1[idx]
             
-        elif type[0] == 'inter1skf':
-            p_swap_inter = type[1]
+        elif type == 'inter1skf':
             idx = np.where(np.random.rand(len(pa)) < p_swap_inter)[0]
             c2[idx] = c1[idx]
 

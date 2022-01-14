@@ -5,7 +5,7 @@ def population_init(N, num_tasks, d, min_val = 0, max_val = 1):
     pop.shape = (N * num_tasks, d) \n
     skill_factor_arr.shape = (N * num_tasks, )
     '''
-    pop = np.array([np.random.uniform(min_val, max_val, d) for i in range(N * num_tasks)])
+    pop = np.random.uniform(min_val, max_val, size = (N * num_tasks, d) )
     skill_factor_arr = np.array([[i] * N for i in range(num_tasks)]).reshape(-1, )
     return pop, skill_factor_arr
 

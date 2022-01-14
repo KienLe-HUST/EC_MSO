@@ -117,7 +117,7 @@ class Schwefel(AbstractFunc):
     '''
     def __call__(self, x):
         x = self.decode(x)
-        return 418.9829*self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x))))
+        return 418.9829*self.dim - np.sum(x * np.sin(np.sqrt(np.abs(x)))) 
     
 class Griewank(AbstractFunc):
     ''' 
