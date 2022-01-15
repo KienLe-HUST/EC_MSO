@@ -1,3 +1,4 @@
+from copy import copy
 import numpy as np
 
 class AbstractMutation():
@@ -5,7 +6,9 @@ class AbstractMutation():
         pass
     def __call__(self, p) -> np.ndarray:
         pass
-
+class NoMutation(AbstractMutation):
+    def __call__(self, p) -> np.ndarray:
+        return p
 class Polynomial_Mutation(AbstractMutation):
     '''
     p in [0, 1]^n
@@ -50,6 +53,25 @@ class Polynomial_Mutation(AbstractMutation):
 
         return ind
 
-class NoMutation(AbstractMutation):
-    def __call__(self, p) -> np.ndarray:
-        return p
+class GaussMutation(AbstractMutation):
+    '''
+    p in [0, 1]^n
+    '''
+    def __init__(self, scale = 1):
+        self.scale = scale
+    
+    def __call__(self, p) -> np.ndarray:   
+        super().__call__(p)
+
+        ind = np.copy(p)
+        pm = 1/len(ind)
+
+        idx_mutation = np.where(np.random.rand(len(ind)) < pm)[0]
+
+        t = ind[idx_mutation] + np.random.normal(0, self.scale, size = len(idx_mutation))
+        
+        t = np.where(t > 1, ind[idx_mutation] + np.random.rand() * (1 - ind[idx_mutation]), t)
+        t = np.where(t < 0, np.random.rand() * ind[idx_mutation], t)
+
+        ind[idx_mutation] = t
+        return ind
