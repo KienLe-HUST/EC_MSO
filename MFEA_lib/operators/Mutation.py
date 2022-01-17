@@ -3,10 +3,15 @@ import numpy as np
 
 class AbstractMutation():
     def __init__(self):
+        self.__name__ = self.__class__.__name__
         pass
     def __call__(self, p) -> np.ndarray:
         pass
 class NoMutation(AbstractMutation):
+    def __init__(self):
+        super().__init__()
+        self.__name__ = self.__class__.__name__
+        pass
     def __call__(self, p) -> np.ndarray:
         return p
 class Polynomial_Mutation(AbstractMutation):
@@ -16,7 +21,8 @@ class Polynomial_Mutation(AbstractMutation):
     def __init__(self, nm = 15, mutate_all_dimensions:bool = False):
         self.nm = nm
         self.mutate_all_dimensions = mutate_all_dimensions
-    
+        self.__name__ = self.__class__.__name__ + ' nm = ' + str(nm)
+
     def __call__(self, p) -> np.ndarray:
         super().__call__(p)
 
@@ -59,6 +65,7 @@ class GaussMutation(AbstractMutation):
     '''
     def __init__(self, scale = 1):
         self.scale = scale
+        self.__name__ = self.__class__.__name__ + ' scale = ' + str(scale)
     
     def __call__(self, p) -> np.ndarray:   
         super().__call__(p)
