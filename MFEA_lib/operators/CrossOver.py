@@ -75,14 +75,17 @@ class SBX_refuseInter(AbstractCrossOver):
         elif type == 'inter1skf':
             # idx_refuse = np.where((np.random.rand(len(pa)) < p_refuse_inter) * (np.abs(c2 - c1) > d_swap))[0]
             # c2[idx_refuse] = c1[idx_refuse]
+            # d_c = np.abs(c2 - c1)
 
-            idx_swap = np.where((np.random.rand(len(pa)) < 0.5) * (np.abs(c2 - c1) < d_swap))[0]
-            c1[idx_swap], c2[idx_swap] = c2[idx_swap], c1[idx_swap]
+            # idx_swap = np.where((np.random.rand(len(pa)) < 0.5) * (d_c < d_swap))[0]
+            # c1[idx_swap], c2[idx_swap] = c2[idx_swap], c1[idx_swap]
 
+            
             # mutation
             pm = 1/len(pa)
             idx_mutation = np.where(np.random.rand(len(pa)) < pm)[0]
             c1[idx_mutation] = pb[idx_mutation]
-
+            c2[idx_mutation] = pb[idx_mutation]
+            
 
         return c1, c2
