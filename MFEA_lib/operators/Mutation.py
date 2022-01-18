@@ -4,10 +4,10 @@ import numpy as np
 class AbstractMutation():
     def __init__(self):
         pass
-    def __call__(self, p) -> np.ndarray:
+    def __call__(self, p, *arg) -> np.ndarray:
         pass
 class NoMutation(AbstractMutation):
-    def __call__(self, p) -> np.ndarray:
+    def __call__(self, p, *arg) -> np.ndarray:
         return p
 class Polynomial_Mutation(AbstractMutation):
     '''
@@ -17,7 +17,7 @@ class Polynomial_Mutation(AbstractMutation):
         self.nm = nm
         self.mutate_all_dimensions = mutate_all_dimensions
     
-    def __call__(self, p) -> np.ndarray:
+    def __call__(self, p, *arg) -> np.ndarray:
         super().__call__(p)
 
         ind = np.copy(p)
@@ -60,7 +60,7 @@ class GaussMutation(AbstractMutation):
     def __init__(self, scale = 1):
         self.scale = scale
     
-    def __call__(self, p) -> np.ndarray:   
+    def __call__(self, p, *arg) -> np.ndarray:   
         super().__call__(p)
 
         ind = np.copy(p)
@@ -68,31 +68,6 @@ class GaussMutation(AbstractMutation):
 
         idx_mutation = np.where(np.random.rand(len(ind)) < pm)[0]
 
-        t = ind[idx_mutation] + np.random.normal(0, self.scale, size = len(idx_mutation))
-        
-        t = np.where(t > 1, ind[idx_mutation] + np.random.rand() * (1 - ind[idx_mutation]), t)
-        t = np.where(t < 0, np.random.rand() * ind[idx_mutation], t)
-
-        ind[idx_mutation] = t
-        return ind
-
-class GMDScale(AbstractMutation):
-    '''
-    p in [0, 1]^n
-    '''
-    def __init__(self, nb_tasks: int, sigmoid = .1, scale_sigmoid = .1):
-        self.nb_tasks = nb_tasks
-        self.scale_sigmoid = scale_sigmoid
-        self.sigmoid: np.ndarray = np.zeros((nb_tasks, )) + sigmoid
-        
-    def __call__(self, p) -> np.ndarray:   
-        super().__call__(p)
-        ind = np.copy(p)
-        pm = 1/len(ind)
-
-        idx_mutation = np.where(np.random.rand(len(ind)) < pm)[0]
-
-        np.random.normal(self.sigmoid, self.sigmoid * self.scale_sigmoid)
         t = ind[idx_mutation] + np.random.normal(0, self.scale, size = len(idx_mutation))
         
         t = np.where(t > 1, ind[idx_mutation] + np.random.rand() * (1 - ind[idx_mutation]), t)

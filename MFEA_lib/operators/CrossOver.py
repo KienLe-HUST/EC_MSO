@@ -2,6 +2,8 @@ from re import U
 from typing import Tuple
 import numpy as np
 
+from MFEA_lib.operators.Mutation import *
+
 
 class AbstractCrossOver():
     def __init__(self) -> None:
