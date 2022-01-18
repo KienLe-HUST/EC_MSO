@@ -57,9 +57,15 @@ class newSBX(AbstractCrossOver):
     def get_dim_uss(self, dim_uss):
         self.dim_uss = dim_uss
         self.prob = np.ones((self.nb_tasks, self.nb_tasks, dim_uss))
+        
+        #nb all offspring bored by crossover at dimensions d by task x task
         self.sum_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
-        self.success_crossover_each_dimension = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
+        #index off offspring
         self.epoch_idx_crossover = []
+
+        #nb inds alive after epoch
+        self.success_crossover_each_dimension = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
+      
         self.skf_parent = np.empty((0, 2), dtype= int)
 
     def update(self, idx_success):
