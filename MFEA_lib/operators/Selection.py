@@ -15,7 +15,9 @@ class ElitismSelection(AbstractSelection):
 
     return: index of selected individuals
     '''
-    def __call__(self, skill_factor_arr, pop_fitness, nb_inds_tasks: np.ndarray) -> np.ndarray:
+    def __init__(self,):
+        super().__init__()
+    def __call__(self, skill_factor_arr, pop_fitness, nb_inds_tasks: np.ndarray, shuffle = True) -> np.ndarray:
         idx_selected_inds = np.empty((0,), dtype= int)
         
         for i in range (len(nb_inds_tasks)):
@@ -25,6 +27,6 @@ class ElitismSelection(AbstractSelection):
             
             sorted_idx = idx_inds_i[np.argsort(-pop_fitness[idx_inds_i])]
             idx_selected_inds = np.append(idx_selected_inds, sorted_idx[:N_i], axis = 0)
-
-        np.random.shuffle(idx_selected_inds)
+        if shuffle:
+            np.random.shuffle(idx_selected_inds)
         return idx_selected_inds
