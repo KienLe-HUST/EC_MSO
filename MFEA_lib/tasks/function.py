@@ -97,7 +97,7 @@ class Ackley(AbstractFunc):
     def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, bound: tuple = None, fixed = False):
         super().__init__(dim, shift, rotation_matrix, bound)
         # return exact 0 in global optima
-        self.fixed = False
+        self.fixed = fixed
     def __call__(self, x):
         x = self.decode(x)
         if self.fixed:
