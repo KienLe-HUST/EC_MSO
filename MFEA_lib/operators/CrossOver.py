@@ -4,18 +4,18 @@ import numpy as np
 
 
 class AbstractCrossOver():
-    def __init__(self) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         pass
-    def __call__(self, pa, pb, type = None, *args) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         pass
 
 class SBX_CrossOver(AbstractCrossOver):
     '''
     pa, pb in [0, 1]^n
     '''
-    def __init__(self, nc = 15):
+    def __init__(self, nc = 15, *args, **kwargs):
         self.nc = nc
-    def __call__(self, pa, pb, type = None, p_swap_inter = 0.1, d_swap = 0.1) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, type = None, p_swap_inter = 0.1, d_swap = 0.1, *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         '''
         type = 'inter' / 'intra' / ('inter1skf', p_swap_inter)
         '''
@@ -49,7 +49,7 @@ class newSBX(AbstractCrossOver):
     '''
     pa, pb in [0, 1]^n
     '''
-    def __init__(self, nb_tasks: int, nc = 15, gamma = .9):
+    def __init__(self, nb_tasks: int, nc = 15, gamma = .9, *args, **kwargs):
         self.nc = nc
         self.nb_tasks = nb_tasks
         self.gamma = gamma
@@ -92,7 +92,7 @@ class newSBX(AbstractCrossOver):
 
         self.prob = np.clip(self.prob, 1/self.dim_uss, 1)
         
-    def __call__(self, pa, pb, skf: tuple[int, int]) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, skf: tuple[int, int], *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         '''
         skf = (skf_pa, skf_pb)
         '''
