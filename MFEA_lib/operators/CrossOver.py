@@ -68,9 +68,6 @@ class newSBX(AbstractCrossOver):
       
         self.skf_parent = np.empty((0, 2), dtype= int)
 
-        # NOTE
-        self.type_offspring = np.empty((0,), dtype= int)
-        self.count = [0, 0, 0, 0]
     def update(self, idx_success):
         # sum success crossover
         for idx in idx_success:
@@ -86,21 +83,13 @@ class newSBX(AbstractCrossOver):
 
         # update prob 
         self.prob = self.prob * self.gamma + (1 - self.gamma) * per_success
+        self.prob = np.clip(self.prob, 1/self.dim_uss, 1)
 
         # reset
         self.sum_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
         self.success_crossover_each_dimension = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
         self.epoch_idx_crossover = []
         self.skf_parent = np.empty((0, 2), dtype= int)
-
-        self.prob = np.clip(self.prob, 1/self.dim_uss, 1)
-        
-        #NOTE
-        self.count[0] += len(np.where(self.type_offspring[idx_success] == 0)[0])
-        self.count[1] += len(np.where(self.type_offspring[idx_success] == 1)[0])
-        self.count[2] += len(np.where(self.type_offspring[idx_success] == 2)[0])
-        self.count[3] += len(self.type_offspring)
-        self.type_offspring = np.empty((0,), dtype= int)
 
     def __call__(self, pa, pb, skf: tuple[int, int], *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         '''
@@ -128,9 +117,7 @@ class newSBX(AbstractCrossOver):
             #swap
             idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
             c1[idx], c2[idx] = c2[idx], c1[idx]
-        
-            # NOTE
-            self.type_offspring = np.append(self.type_offspring, [0, 0], axis = 0)
+
         else:
             #like pa
             c1 = np.where(idx_crossover, 0.5*((1 + beta) * pa + (1 - beta) * pb), pa)
@@ -141,5 +128,8 @@ class newSBX(AbstractCrossOver):
             c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
 
             # NOTE
-            self.type_offspring = np.append(self.type_offspring, [1, 2], axis = 0)
+            # #swap
+            # idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
+            # c1[idx], c2[idx] = c2[idx], c1[idx]
+        
         return c1, c2
