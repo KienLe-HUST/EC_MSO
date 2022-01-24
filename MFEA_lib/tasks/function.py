@@ -94,23 +94,16 @@ class Ackley(AbstractFunc):
     a = 20
     b = 0.2
     c = 2*np.pi 
-    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, bound: tuple = None, fixed = False):
+    def __init__(self, dim, shift: list = 0, rotation_matrix: np.ndarray = None, bound: tuple = None):
         super().__init__(dim, shift, rotation_matrix, bound)
         # return exact 0 in global optima
-        self.fixed = fixed
     def __call__(self, x):
         x = self.decode(x)
-        if self.fixed:
-            return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
-            - np.exp(np.average(np.cos(self.c * x)))\
-            + self.a\
-            + np.exp(1)\
-            - 4.440892098500626e-16
-        else:
-            return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
-            - np.exp(np.average(np.cos(self.c * x)))\
-            + self.a\
-            + np.exp(1)
+        return -self.a * np.exp(-self.b*np.sqrt(np.average(x**2)))\
+        - np.exp(np.average(np.cos(self.c * x)))\
+        + self.a\
+        + np.exp(1)\
+        - 4.440892098500626e-16
 
 class Rosenbrock(AbstractFunc):
     '''

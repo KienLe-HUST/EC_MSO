@@ -107,7 +107,7 @@ class CEC17_benchmark():
         Sphere(     50,shift= -80,  bound= [-100, 100]), # -80
         Weierstrass(25,shift= -0.4, bound= [-0.5, 0.5]), # -0.4
         Rosenbrock( 50,shift= -1,   bound= [-50, 50]),# 0
-        Ackley(     50,shift= 40,   bound= [-50, 50], fixed = fix),    # 40
+        Ackley(     50,shift= 40,   bound= [-50, 50]),    # 40
         Weierstrass(50,shift= -0.4, bound= [-0.5, 0.5]), # -0.4
         Schwefel(   50,shift= 0,    bound= [-500, 500],fixed = fix), # 420.9687
         Griewank(   50,shift= [-80, 80], bound= [-100, 100]), # -80, 80
