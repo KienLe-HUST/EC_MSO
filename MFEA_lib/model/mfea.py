@@ -5,6 +5,7 @@ from ..tasks.function import AbstractFunc
 from ..GA import population_init, factorial_cost, factorial_rank, skill_factor_best_task
 import sys
 import matplotlib.pyplot as plt
+import random
 
 class AbstractModel():
 
@@ -15,6 +16,7 @@ class AbstractModel():
             pass
         else:
             np.random.seed(seed)
+            random.seed(seed)
         pass
     def render(self, shape: Tuple[int, int], title = "", yscale = None, ylim: list[float, float] = None):
         fig = plt.figure(figsize= (shape[1]* 6, shape[0] * 5))
