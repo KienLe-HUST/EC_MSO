@@ -1,7 +1,7 @@
 from re import U
 from typing import Tuple
 import numpy as np
-
+import random
 
 class AbstractCrossOver():
     def __init__(self, *args, **kwargs) -> None:
@@ -68,6 +68,12 @@ class newSBX(AbstractCrossOver):
       
         self.skf_parent = np.empty((0, 2), dtype= int)
 
+        #dis memory
+        self.M_dis: list = []
+        self.M_success_dis: list[list] = np.empty((self.nb_tasks, 0)).tolist()
+        
+        # type_crossover: 'from_loc' / 'from_exp'
+        self.type_crossover = []
     def update(self, idx_success):
         # sum success crossover
         for idx in idx_success:
@@ -85,11 +91,20 @@ class newSBX(AbstractCrossOver):
         self.prob = self.prob * self.gamma + (1 - self.gamma) * per_success
         self.prob = np.clip(self.prob, 1/self.dim_uss, 1)
 
+        # reset M_success_dis
+        self.M_success_dis: list[list] = np.empty((self.nb_tasks, 0)).tolist()
+        # save success dis pb - pa
+        for idx in idx_success:
+            self.M_success_dis[self.skf_parent[idx][0]].append(self.M_dis[idx])
+
         # reset
         self.sum_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
         self.success_crossover_each_dimension = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
         self.epoch_idx_crossover = []
         self.skf_parent = np.empty((0, 2), dtype= int)
+
+        self.M_dis: list = []
+
 
     def __call__(self, pa, pb, skf: tuple[int, int], *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         '''
@@ -101,35 +116,51 @@ class newSBX(AbstractCrossOver):
         self.epoch_idx_crossover.append(idx_crossover)
         self.skf_parent = np.append(self.skf_parent, [[skf[0], skf[1]]], axis = 0)
         self.skf_parent = np.append(self.skf_parent, [[skf[0], skf[1]]], axis = 0)
+        # save dis of parents
+        self.M_dis.append(pb - pa)
+        self.M_dis.append(pb - pa)
 
         u = np.random.rand(self.dim_uss)    
         # ~1
         beta = np.where(u < 0.5, (2*u)**(1/(self.nc +1)), (2 * (1 - u))**(-1 / (1 + self.nc)))
 
+        # intra
         if skf[0] == skf[1]:
             #like pa
             c1 = 0.5*((1 + beta) * pa + (1 - beta) * pb)
             #like pb
             c2 = 0.5*((1 - beta) * pa + (1 + beta) * pb)
 
-            c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
-
             #swap
             idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
             c1[idx], c2[idx] = c2[idx], c1[idx]
-
+            
+            self.type_crossover.append('from_loc')
+            self.type_crossover.append('from_loc')
         else:
-            #like pa
-            c1 = np.where(idx_crossover, 0.5*((1 + beta) * pa + (1 - beta) * pb), pa)
-            #like pb
-            c2 = np.where(idx_crossover, 0.5*((1 - beta) * pa + (1 + beta) * pb), pa)
-            # c2 = np.where(idx_crossover, pb, pa)
 
-            c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
+            # a learn from experience of b
+            if np.random.rand() < 0.5 and len(self.M_success_dis[skf[1]]) > 0:
+                #NOTE need idx_crossover???
+                pb_exp = np.where(idx_crossover, pa + np.random.choice(self.M_success_dis[skf[1]]), pa)
 
-            # NOTE
-            # #swap
-            # idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
-            # c1[idx], c2[idx] = c2[idx], c1[idx]
-        
+                #like pa
+                c1 = 0.5*((1 + beta) * pa + (1 - beta) * pb_exp)
+                #like pb_exp
+                c2 = 0.5*((1 - beta) * pa + (1 + beta) * pb_exp)
+
+                self.type_crossover.append('from_exp')
+                self.type_crossover.append('from_exp')
+
+            # a learn from location of b
+            else:
+                #like pa
+                c1 = np.where(idx_crossover, 0.5*((1 + beta) * pa + (1 - beta) * pb), pa)
+                #like pb
+                c2 = np.where(idx_crossover, 0.5*((1 - beta) * pa + (1 + beta) * pb), pa)
+
+                self.type_crossover.append('from_loc')
+                self.type_crossover.append('from_loc')
+
+        c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
         return c1, c2
