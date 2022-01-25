@@ -57,6 +57,9 @@ class newSBX(AbstractCrossOver):
     def get_dim_uss(self, dim_uss):
         self.dim_uss = dim_uss
         self.prob = np.ones((self.nb_tasks, self.nb_tasks, dim_uss))/dim_uss
+        for i in range(self.nb_tasks):
+            self.prob[i, i, :] = 1
+        
         
         #nb all offspring bored by crossover at dimensions d by task x task
         self.count_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
@@ -81,10 +84,11 @@ class newSBX(AbstractCrossOver):
             self.count_crossover_each_dimensions != 0, 
             self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10),
             self.prob
+            # 0
         )
 
         # new prob
-        new_prob = np.copy(per_success)
+        new_prob = np.clip(np.copy(per_success), 0, 1)
 
         # update prob 
         self.prob = self.prob * self.gamma + (1 - self.gamma) * new_prob
