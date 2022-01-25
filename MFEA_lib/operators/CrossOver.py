@@ -15,11 +15,11 @@ class SBX_CrossOver(AbstractCrossOver):
     '''
     def __init__(self, nc = 15, *args, **kwargs):
         self.nc = nc
-    def __call__(self, pa, pb, type = None, p_swap_inter = 0.1, d_swap = 0.1, *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, pa, pb, skf: tuple[int, int], *args, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         '''
         type = 'inter' / 'intra' / ('inter1skf', p_swap_inter)
         '''
-        assert type == 'inter' or type == 'intra' or type == 'inter1skf'
+        # assert type == 'inter' or type == 'intra' or type == 'inter1skf'
 
         u = np.random.rand(len(pa))
 
@@ -33,15 +33,15 @@ class SBX_CrossOver(AbstractCrossOver):
 
         c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
 
-        if type == 'intra':
+        if skf[0] == skf[1]:
             idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
             c1[idx], c2[idx] = c2[idx], c1[idx]
             
-        elif type == 'inter1skf':
-            idx = np.where(np.random.rand(len(pa)) < p_swap_inter)[0]
-            # idx = np.where((np.random.rand(len(pa)) < p_swap_inter) * (np.abs(c1 - c2) < d_swap))[0]
-            # idx = np.where(np.abs(pa - pb) > d_swap)[0]
-            c2[idx] = c1[idx]
+        # elif type == 'inter1skf':
+        #     idx = np.where(np.random.rand(len(pa)) < p_swap_inter)[0]
+        #     # idx = np.where((np.random.rand(len(pa)) < p_swap_inter) * (np.abs(c1 - c2) < d_swap))[0]
+        #     # idx = np.where(np.abs(pa - pb) > d_swap)[0]
+        #     c2[idx] = c1[idx]
 
         return c1, c2
 
