@@ -56,10 +56,10 @@ class newSBX(AbstractCrossOver):
 
     def get_dim_uss(self, dim_uss):
         self.dim_uss = dim_uss
-        self.prob = np.ones((self.nb_tasks, self.nb_tasks, dim_uss))
+        self.prob = np.ones((self.nb_tasks, self.nb_tasks, dim_uss))/dim_uss
         
         #nb all offspring bored by crossover at dimensions d by task x task
-        self.sum_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
+        self.count_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
         #index off offspring
         self.epoch_idx_crossover = []
 
@@ -69,26 +69,29 @@ class newSBX(AbstractCrossOver):
         self.skf_parent = np.empty((0, 2), dtype= int)
 
     def update(self, idx_success):
+
         # sum success crossover
         for idx in idx_success:
             self.success_crossover_each_dimension[self.skf_parent[idx][0], self.skf_parent[idx][1]] += self.epoch_idx_crossover[idx]
 
         # percent success:
         per_success = np.copy(self.prob)
+        # per_success = success / count
         per_success = np.where(
-            self.sum_crossover_each_dimensions != 0, 
-            #NOTE
-            # self.success_crossover_each_dimension / (self.success_crossover_each_dimension + 1e-10),
-            self.success_crossover_each_dimension / (self.sum_crossover_each_dimensions + 1e-10),
+            self.count_crossover_each_dimensions != 0, 
+            self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10),
             self.prob
         )
 
+        # new prob
+        new_prob = np.copy(per_success)
+
         # update prob 
-        self.prob = self.prob * self.gamma + (1 - self.gamma) * per_success
+        self.prob = self.prob * self.gamma + (1 - self.gamma) * new_prob
         self.prob = np.clip(self.prob, 1/self.dim_uss, 1)
 
         # reset
-        self.sum_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
+        self.count_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
         self.success_crossover_each_dimension = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
         self.epoch_idx_crossover = []
         self.skf_parent = np.empty((0, 2), dtype= int)
@@ -98,7 +101,7 @@ class newSBX(AbstractCrossOver):
         skf = (skf_pa, skf_pb)
         '''
         idx_crossover = (np.random.rand(self.dim_uss) < self.prob[skf[0], skf[1]])
-        self.sum_crossover_each_dimensions[skf[0], skf[1]] += 2 * idx_crossover
+        self.count_crossover_each_dimensions[skf[0], skf[1]] += 2 * idx_crossover
         self.epoch_idx_crossover.append(idx_crossover)
         self.epoch_idx_crossover.append(idx_crossover)
         self.skf_parent = np.append(self.skf_parent, [[skf[0], skf[1]]], axis = 0)
@@ -128,10 +131,5 @@ class newSBX(AbstractCrossOver):
             # c2 = np.where(idx_crossover, pb, pa)
 
             c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
-
-            # NOTE
-            # #swap
-            # idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
-            # c1[idx], c2[idx] = c2[idx], c1[idx]
         
         return c1, c2
