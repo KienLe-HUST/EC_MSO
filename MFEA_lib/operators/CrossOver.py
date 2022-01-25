@@ -49,10 +49,11 @@ class newSBX(AbstractCrossOver):
     '''
     pa, pb in [0, 1]^n
     '''
-    def __init__(self, nb_tasks: int, nc = 15, gamma = .9, *args, **kwargs):
+    def __init__(self, nb_tasks: int, nc = 15, gamma = .9, alpha = 1, *args, **kwargs):
         self.nc = nc
         self.nb_tasks = nb_tasks
         self.gamma = gamma
+        self.alpha = alpha
 
     def get_dim_uss(self, dim_uss):
         self.dim_uss = dim_uss
@@ -82,7 +83,7 @@ class newSBX(AbstractCrossOver):
         # per_success = success / count
         per_success = np.where(
             self.count_crossover_each_dimensions != 0, 
-            self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10),
+            (self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10))**self.alpha,
             self.prob
             # 0
         )
