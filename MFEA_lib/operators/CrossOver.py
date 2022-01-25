@@ -1,5 +1,5 @@
 from re import U
-from typing import Tuple
+from typing import Deque, Tuple
 import numpy as np
 import random
 
@@ -49,11 +49,11 @@ class newSBX(AbstractCrossOver):
     '''
     pa, pb in [0, 1]^n
     '''
-    def __init__(self, nb_tasks: int, nc = 15, gamma = .9, num_epochs_save_mem = 1, *args, **kwargs):
+    def __init__(self, nb_tasks: int, nc = 15, gamma = .9, num_save_mem = 1, *args, **kwargs):
         self.nc = nc
         self.nb_tasks = nb_tasks
         self.gamma = gamma
-        self.nb_epochs_save_mem = num_epochs_save_mem
+        self.nb_save_mem = num_save_mem
         self.nb_update = 0
     def get_dim_uss(self, dim_uss):
         self.dim_uss = dim_uss
@@ -71,7 +71,7 @@ class newSBX(AbstractCrossOver):
 
         #dis memory
         self.M_dis: list = []
-        self.M_success_dis: list[list] = np.empty((self.nb_tasks, 0)).tolist()
+        self.M_success_dis = [Deque(maxlen= self.nb_save_mem ) for i in range(self.nb_tasks)]
         
         # type_crossover: 'from_loc' / 'from_exp'
         self.type_crossover = []
@@ -92,7 +92,15 @@ class newSBX(AbstractCrossOver):
 
         # update type_rate
         g = 0.7
-        self.exp_rate = g * self.exp_rate + (1 - g) * count_type[:, :, 1]/(count_type[:, :, 0] + count_type[:, :, 1] + 1e-2)
+        upd_rate = np.zeros_like(self.exp_rate)
+        for i in range(self.nb_tasks):
+            for j in range(self.nb_tasks):
+                if count_type[i, j, 0] == 0 and count_type[i, j, 1] == 0:
+                    upd_rate[i, j] = self.exp_rate[i, j]
+                else:
+                    upd_rate[i, j] = count_type[i, j, 1]/(count_type[i, j, 0] + count_type[i, j, 1] + 1e-2)
+
+        self.exp_rate = g * self.exp_rate + (1 - g) * upd_rate
 
         # percent success:
         per_success = np.copy(self.prob_crossover_dim)
@@ -105,10 +113,6 @@ class newSBX(AbstractCrossOver):
         # update prob_crossover_dim 
         self.prob_crossover_dim = self.prob_crossover_dim * self.gamma + (1 - self.gamma) * per_success
         self.prob_crossover_dim = np.clip(self.prob_crossover_dim, 1/self.dim_uss, 1)
-
-        # reset M_success_dis
-        if self.nb_update % self.nb_epochs_save_mem:
-            self.M_success_dis: list[list] = np.empty((self.nb_tasks, 0)).tolist()
 
         # reset
         self.sum_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, self.dim_uss))
@@ -153,7 +157,7 @@ class newSBX(AbstractCrossOver):
 
             # a learn from experience of b
             if np.random.rand() < self.exp_rate[skf[0], skf[1]] and len(self.M_success_dis[skf[1]]) > 0:
-                pb_exp = pa + random.choice(self.M_success_dis[skf[1]])
+                pb_exp = pa - random.choice(self.M_success_dis[skf[1]])
 
                 #like pa
                 c1 = 0.5*((1 + beta) * pa + (1 - beta) * pb_exp)
