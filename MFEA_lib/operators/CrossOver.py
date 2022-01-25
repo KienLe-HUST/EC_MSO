@@ -83,7 +83,7 @@ class newSBX(AbstractCrossOver):
         # per_success = success / count
         per_success = np.where(
             self.count_crossover_each_dimensions != 0, 
-            (self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10))**self.alpha,
+            (self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10))**(1/self.alpha),
             self.prob
             # 0
         )
