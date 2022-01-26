@@ -57,7 +57,7 @@ class newSBX(AbstractCrossOver):
 
     def get_dim_uss(self, dim_uss):
         self.dim_uss = dim_uss
-        self.prob = np.ones((self.nb_tasks, self.nb_tasks, dim_uss))/dim_uss
+        self.prob = np.ones((self.nb_tasks, self.nb_tasks, dim_uss))/2
         for i in range(self.nb_tasks):
             self.prob[i, i, :] = 1
         
@@ -122,11 +122,9 @@ class newSBX(AbstractCrossOver):
             #like pb
             c2 = 0.5*((1 - beta) * pa + (1 + beta) * pb)
 
-            c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
-
             #swap
-            idx = np.where(np.random.rand(len(pa)) < 0.5)[0]
-            c1[idx], c2[idx] = c2[idx], c1[idx]
+            idx_swap = np.where(np.random.rand(len(pa)) < 0.5)[0]
+            c1[idx_swap], c2[idx_swap] = c2[idx_swap], c1[idx_swap]
 
         else:
             #like pa
@@ -135,6 +133,10 @@ class newSBX(AbstractCrossOver):
             c2 = np.where(idx_crossover, 0.5*((1 - beta) * pa + (1 + beta) * pb), pa)
             # c2 = np.where(idx_crossover, pb, pa)
 
-            c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
+            #swap
+            idx_swap = np.where((np.random.rand(len(pa)) < 0.5) * (self.prob[skf[0], skf[1]] > 0.6))
+            c1[idx_swap], c2[idx_swap] = c2[idx_swap], c1[idx_swap]
+
+        c1, c2 = np.clip(c1, 0, 1), np.clip(c2, 0, 1)
         
         return c1, c2
