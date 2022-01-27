@@ -81,6 +81,8 @@ class newSBX(AbstractCrossOver):
         # percent success:
         per_success = np.copy(self.prob)
         # per_success = success / count
+
+
         per_success = np.where(
             self.count_crossover_each_dimensions != 0, 
             (self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10))** (1/self.alpha),
@@ -88,8 +90,19 @@ class newSBX(AbstractCrossOver):
             # 0
         )
 
+        # TODO clean code
         # new prob
         new_prob = np.clip(np.copy(per_success), 0, 1)
+        # unchange prob of greater than intra
+        tmp_smaller_intra_change = np.empty_like(self.count_crossover_each_dimensions)
+        for i in range(self.nb_tasks):
+            tmp_smaller_intra_change[i] = (new_prob[i] <= new_prob[i, i])
+        new_prob = np.where(tmp_smaller_intra_change, new_prob, 1)
+        new_prob = np.where(
+            self.count_crossover_each_dimensions != 0, 
+            new_prob,
+            self.prob
+        )
 
         # update prob 
         self.prob = self.prob * self.gamma + (1 - self.gamma) * new_prob
@@ -105,10 +118,7 @@ class newSBX(AbstractCrossOver):
         '''
         skf = (skf_pa, skf_pb)
         '''
-        idx_crossover = (np.random.rand(self.dim_uss) < self.prob[skf[0], skf[1]])
-        self.count_crossover_each_dimensions[skf[0], skf[1]] += 2 * idx_crossover
-        self.epoch_idx_crossover.append(idx_crossover)
-        self.epoch_idx_crossover.append(idx_crossover)
+
         self.skf_parent = np.append(self.skf_parent, [[skf[0], skf[1]]], axis = 0)
         self.skf_parent = np.append(self.skf_parent, [[skf[0], skf[1]]], axis = 0)
 
@@ -117,6 +127,10 @@ class newSBX(AbstractCrossOver):
         beta = np.where(u < 0.5, (2*u)**(1/(self.nc +1)), (2 * (1 - u))**(-1 / (1 + self.nc)))
 
         if skf[0] == skf[1]:
+            idx_crossover = np.ones_like(pa)
+            self.count_crossover_each_dimensions[skf[0], skf[1]] += 2 * idx_crossover
+            self.epoch_idx_crossover.append(idx_crossover)
+            self.epoch_idx_crossover.append(idx_crossover)
             #like pa
             c1 = 0.5*((1 + beta) * pa + (1 - beta) * pb)
             #like pb
@@ -127,6 +141,12 @@ class newSBX(AbstractCrossOver):
             c1[idx_swap], c2[idx_swap] = c2[idx_swap], c1[idx_swap]
 
         else:
+            idx_crossover = (np.random.rand(self.dim_uss) < self.prob[skf[0], skf[1]])
+            if np.sum(idx_crossover) == 0:
+                idx_crossover[np.random.randint(0, self.dim_uss)] = True
+            self.count_crossover_each_dimensions[skf[0], skf[1]] += 2 * idx_crossover
+            self.epoch_idx_crossover.append(idx_crossover)
+            self.epoch_idx_crossover.append(idx_crossover)
             #like pa
             c1 = np.where(idx_crossover, 0.5*((1 + beta) * pa + (1 - beta) * pb), pa)
             #like pb
