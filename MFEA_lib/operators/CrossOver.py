@@ -61,7 +61,6 @@ class newSBX(AbstractCrossOver):
         for i in range(self.nb_tasks):
             self.prob[i, i, :] = 1
         
-        
         #nb all offspring bored by crossover at dimensions d by task x task
         self.count_crossover_each_dimensions = np.zeros((self.nb_tasks, self.nb_tasks, dim_uss))
         #index off offspring
@@ -78,26 +77,20 @@ class newSBX(AbstractCrossOver):
         for idx in idx_success:
             self.success_crossover_each_dimension[self.skf_parent[idx][0], self.skf_parent[idx][1]] += self.epoch_idx_crossover[idx]
 
-        # percent success:
-        per_success = np.copy(self.prob)
-        # per_success = success / count
+        # percent success: per_success = success / count
+        per_success = (self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10))** (1/self.alpha)
 
-
-        per_success = np.where(
-            self.count_crossover_each_dimensions != 0, 
-            (self.success_crossover_each_dimension / (self.count_crossover_each_dimensions + 1e-10))** (1/self.alpha),
-            self.prob
-            # 0
-        )
-
-        # TODO clean code
         # new prob
-        new_prob = np.clip(np.copy(per_success), 0, 1)
-        # unchange prob of greater than intra
+        new_prob = np.copy(per_success)
+        # prob_succes greater than intra -> p = 1
         tmp_smaller_intra_change = np.empty_like(self.count_crossover_each_dimensions)
         for i in range(self.nb_tasks):
             tmp_smaller_intra_change[i] = (new_prob[i] <= new_prob[i, i])
-        new_prob = np.where(tmp_smaller_intra_change, new_prob, 1)
+        new_prob = np.where(
+            tmp_smaller_intra_change, 
+            new_prob, 
+            1
+        )
         new_prob = np.where(
             self.count_crossover_each_dimensions != 0, 
             new_prob,
@@ -151,7 +144,6 @@ class newSBX(AbstractCrossOver):
             c1 = np.where(idx_crossover, 0.5*((1 + beta) * pa + (1 - beta) * pb), pa)
             #like pb
             c2 = np.where(idx_crossover, 0.5*((1 - beta) * pa + (1 + beta) * pb), pa)
-            # c2 = np.where(idx_crossover, pb, pa)
 
             #swap
             idx_swap = np.where((np.random.rand(len(pa)) < 0.5) * (self.prob[skf[0], skf[1]] > 0.6))
