@@ -91,11 +91,11 @@ class GECCO20_benchmark_50tasks():
                 )
             elif func_id == 6:
                 tasks.append(
-                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-0.5, 0.5])
+                    Weierstrass(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-0.5, 0.5])
                 )
             elif func_id == 7:
                 tasks.append(
-                    Rosenbrock(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-500, 500])
+                    Schwefel(__class__.dim, shift= shift, rotation_matrix= matrix, bound= [-500, 500])
                 )
         return tasks    
 
