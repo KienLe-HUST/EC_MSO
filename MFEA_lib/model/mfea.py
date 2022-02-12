@@ -15,6 +15,7 @@ class AbstractModel():
         if seed is None:
             pass
         else:
+            # FIXME not work
             np.random.seed(seed)
             random.seed(seed)
         pass
