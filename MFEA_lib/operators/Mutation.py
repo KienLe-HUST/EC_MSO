@@ -69,8 +69,8 @@ class GaussMutation(AbstractMutation):
 
         t = ind[idx_mutation] + np.random.normal(0, self.scale, size = len(idx_mutation))
         
-        t = np.where(t > 1, ind[idx_mutation] + np.random.rand() * (1 - ind[idx_mutation]), t)
-        t = np.where(t < 0, np.random.rand() * ind[idx_mutation], t)
+        t = np.where(t > 1, ind[idx_mutation] + np.random.rand(len(idx_mutation)) * (1 - ind[idx_mutation]), t)
+        t = np.where(t < 0, np.random.rand(len(idx_mutation)) * ind[idx_mutation], t)
 
         ind[idx_mutation] = t
         return ind
@@ -90,8 +90,8 @@ class GMDScale(AbstractMutation):
 
         t = ind[idx_mutation] + np.random.normal(0, scale[idx_mutation], size = len(idx_mutation))
         
-        t = np.where(t > 1, ind[idx_mutation] + np.random.rand() * (1 - ind[idx_mutation]), t)
-        t = np.where(t < 0, np.random.rand() * ind[idx_mutation], t)
+        t = np.where(t > 1, ind[idx_mutation] + np.random.rand(len(idx_mutation)) * (1 - ind[idx_mutation]), t)
+        t = np.where(t < 0, np.random.rand(len(idx_mutation)) * ind[idx_mutation], t)
 
         ind[idx_mutation] = t
 
